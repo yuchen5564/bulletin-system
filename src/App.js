@@ -1,24 +1,24 @@
-import logo from './logo.svg';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { Container } from 'react-bootstrap';
 import './App.css';
+import Navb from './Navb';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navb />
+      <Container fluid className='mt-5'>
+      <Row className='justify-content-center'>
+        <Col md={7}>
+          <h1 style={{ 'font-family': 'Inter-sb' }}>Welcome</h1><br />
+        </Col>
+      </Row>
+
+      </Container>
+      
+    </>
   );
 }
 
