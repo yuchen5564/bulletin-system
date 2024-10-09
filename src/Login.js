@@ -17,11 +17,6 @@ function Login() {
     const [password, setPassword] = useState("");
     const [error, seterror] = useState("");
   
-    const { user } = useContext(AuthContext);
-    if (user) {
-      return <Navigate replace to="/" />;
-    }
-  
     const handleSubmit = async (e) => {
       e.preventDefault();
       setEmail("");

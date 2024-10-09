@@ -11,6 +11,8 @@ import Post from './Post';
 import NotFound from './NotFound';
 import News from './News';
 import { AuthProvider } from "./firebaseAuth/AuthProvider";
+import ProtectedRoutes from "./ProtectedRoutes"; // Adjust path if necessary
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,8 +21,10 @@ root.render(
   <AuthProvider>
     <Routes>
       <Route exact path="/" element={<App />} />
+      <Route element={<ProtectedRoutes />}>
       <Route exact path='/list' element={<List />} />
       <Route exact path='/post' element={<Post />} />
+      </Route>
       <Route exact path='/news' element={<News />} />
       {/* <Route exact path='/login' element={<Login />} /> */}
       <Route path='*' element={<NotFound />} />
