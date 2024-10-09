@@ -27,6 +27,11 @@ function Login() {
       }
     };
 
+    const { user } = useContext(AuthContext);
+    if (user) {
+      return <Navigate replace to="/list" />;
+    }
+
     return (
         <>
 

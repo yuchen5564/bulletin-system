@@ -10,7 +10,8 @@ import Login from './Login';
 
 import { signOut } from "firebase/auth";
 import { auth } from "./firebaseAuth/firebase";
-
+import { useContext } from "react";
+import AuthContext from "./firebaseAuth/AuthContext";
 import './main.css';
 
 function LoginWindows(props) {
@@ -38,7 +39,10 @@ const handleLogout = async () => {
   await signOut(auth);
 };
 
+
+
 function Navb() {
+  const { user } = useContext(AuthContext);
   const [loginModalShow, setLoginModalShow] = useState(false);
   return (
     <>
@@ -48,11 +52,12 @@ function Navb() {
           <Nav className="me-auto">
             {/* <Nav.Link href="./">Home</Nav.Link> */}
             <Nav.Link href="./news">News</Nav.Link>
-            <Nav.Link href="./list">List</Nav.Link>
-            <Nav.Link href="./post">Post</Nav.Link>
+            {user? <Nav.Link href="./list">List</Nav.Link>:<p></p>}
+            {user? <Nav.Link href="./post">Post</Nav.Link>:<p></p>}
+            
           </Nav>
-          <Button variant="secondary" onClick={() => { setLoginModalShow(true) }}>Login</Button>
-          <Button variant="secondary" onClick={handleLogout}>Logout</Button>
+          {!user? <Button variant="primary" onClick={() => { setLoginModalShow(true) }}>Login</Button>:
+          <Button variant="danger" onClick={handleLogout}>Logout</Button>}
 
         </Container>
       </Navbar>
