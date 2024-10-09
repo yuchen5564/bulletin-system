@@ -8,6 +8,9 @@ import { useState } from 'react';
 
 import Login from './Login';
 
+import { signOut } from "firebase/auth";
+import { auth } from "./firebaseAuth/firebase";
+
 import './main.css';
 
 function LoginWindows(props) {
@@ -31,6 +34,10 @@ function LoginWindows(props) {
 
 }
 
+const handleLogout = async () => {
+  await signOut(auth);
+};
+
 function Navb() {
   const [loginModalShow, setLoginModalShow] = useState(false);
   return (
@@ -45,6 +52,8 @@ function Navb() {
             <Nav.Link href="./post">Post</Nav.Link>
           </Nav>
           <Button variant="secondary" onClick={() => { setLoginModalShow(true) }}>Login</Button>
+          <Button variant="secondary" onClick={handleLogout}>Logout</Button>
+
         </Container>
       </Navbar>
       <br /><br />
