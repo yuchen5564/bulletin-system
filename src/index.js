@@ -10,11 +10,13 @@ import List from './List';
 import Post from './Post';
 import NotFound from './NotFound';
 import News from './News';
-
+import { AuthProvider } from "./firebaseAuth/AuthProvider";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <React.StrictMode>
   <BrowserRouter>
+  <AuthProvider>
     <Routes>
       <Route exact path="/" element={<App />} />
       <Route exact path='/list' element={<List />} />
@@ -23,7 +25,9 @@ root.render(
       {/* <Route exact path='/login' element={<Login />} /> */}
       <Route path='*' element={<NotFound />} />
     </Routes>
+    </AuthProvider>
   </BrowserRouter>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
