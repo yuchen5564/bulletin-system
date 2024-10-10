@@ -107,7 +107,25 @@ function EditWindows(props) {
 function List() {
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [editModalShow, setEditModalShow] = useState(false);
-    // const [document, setDoc] = useState("");
+    const [document, setDoc] = useState(null);
+    const [announcement, setAnnouncement] = useState([]);
+
+    const fetchPost = async () => {
+        //db.collection('cities').order('population', 'desc')
+        await getDocs(query(collection(db, "announcement"), orderBy('ptime', 'desc')))
+            .then((querySnapshot) => {
+                const newData = querySnapshot.docs
+                    .map((doc) => ({ ...doc.data(), id: doc.id }));
+
+                setAnnouncement(newData);
+            })
+
+    }
+
+    useEffect(() => {
+        fetchPost();
+    }, [])
+
     return (
         <>
 
