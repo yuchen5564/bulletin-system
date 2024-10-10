@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import './main.css';
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, doc, setDoc, serverTimestamp, updateDoc, addDoc } from "firebase/firestore";
 import { db, storage } from './firebaseAuth/firebase';
@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 
 
 function Post() {
-
+    const fileInputRef = useRef(null); // Create a ref for the file input
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("Sale");
@@ -74,6 +74,8 @@ function Post() {
                         });
     
                         setSuccess(true);
+                        setTimeout(() => setSuccess(false), 3000);
+                        setTimeout(() => setPercent(false), 3000);
                         clearForm();
                     } catch (e) {
                         seterror(e);
@@ -92,6 +94,7 @@ function Post() {
                 });
     
                 setSuccess(true);
+                setTimeout(() => setSuccess(false), 3000);
                 clearForm();
             } catch (e) {
                 seterror(e);
@@ -107,6 +110,9 @@ function Post() {
         setPicture(""); // Reset the picture URL
         seterror(""); // Clear any error messages
         setDate(""); // Reset date if needed
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""; // Clear the file input
+        }
     };
 
     return (
@@ -141,7 +147,7 @@ function Post() {
                             <Form.Group controlId="formFile" className="mb-3">
                                 <Form.Label>Appendix</Form.Label>
                                 <Row>
-                                    <Col><Form.Control type="file" onChange={handleChange} accept="image/*" /></Col>
+                                    <Col><Form.Control type="file" ref={fileInputRef} onChange={handleChange} accept="image/*" /></Col>
                                 </Row>
                                      
                             </Form.Group>
