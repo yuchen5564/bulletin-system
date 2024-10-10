@@ -52,7 +52,6 @@ function News() {
                                         <Accordion.Item eventKey={i}>
                                             <Accordion.Header><Badge bg="secondary">{item.category}</Badge><pre> </pre>{item.title}</Accordion.Header>
                                             <Accordion.Body>
-                                                {item.id}
                                                 {/* <p>{item.content}</p> */}
                                                 <NewlineText text={item.content} />
                                                 {item.pic ? <p><img src={item.pic} alt="pic" width="300" /><br /></p> : <p></p>}

@@ -8,8 +8,17 @@ import * as Icon from 'react-bootstrap-icons';
 import Modal from 'react-bootstrap/Modal';
 import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
+import { collection, getDocs, query, orderBy, doc, setDoc, where, deleteDoc, updateDoc, addDoc } from "firebase/firestore";
+import { db } from './firebaseAuth/firebase';
 
 import './main.css';
+
+function NewlineText(props) {
+    const text = props.text;
+    const newText = text.split('\n').map(str => <p>{str}</p>);
+
+    return newText;
+}
 
 function DeleteWindows(props) {
     // var docId = props.doc.id;
@@ -119,35 +128,22 @@ function List() {
                             </thead>
                             {/* 以下之後會換成自動取得資料數量 */}
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <Button variant="outline-primary" onClick={() => { setEditModalShow(true) }}><Icon.PencilSquare /></Button>{' '} {/*  ; setDoc(item) */}
-                                        <Button variant="outline-danger" onClick={() => { setDeleteModalShow(true) }}><Icon.Trash /></Button> {/*  ; setDoc(item) */}
-                                    </td>
-                                    <td>Ohter</td>
-                                    <td>Test</td>
-                                    <td>2023/08/08 11:52:58</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <Button variant="outline-primary"><Icon.PencilSquare /></Button>{' '}
-                                        <Button variant="outline-danger"><Icon.Trash /></Button>
-                                    </td>
-                                    <td>Info</td>
-                                    <td>Post 2</td>
-                                    <td>2023/08/08 10:56:32</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <Button variant="outline-primary"><Icon.PencilSquare /></Button>{' '}
-                                        <Button variant="outline-danger"><Icon.Trash /></Button>
-                                    </td>
-                                    <td>Sale</td>
-                                    <td>Post 1: Hello! React</td>
-                                    <td>2023/08/07 23:11:20</td>
-                                </tr>
-
+                            {
+                                announcement?.map((item, i) => (
+                                        <tr>
+                                            <td>
+                                                <Button variant="outline-primary" onClick={() => { setEditModalShow(true); setDoc(item) }}><Icon.PencilSquare /></Button>{' '}
+                                                <Button variant="outline-danger" onClick={() => { setDeleteModalShow(true); setDoc(item) }}><Icon.Trash /></Button>
+                                            </td>
+                                            <td>{item.category}</td> 
+                                            <td>{item.title}</td>  
+                                            <td>{item.ptime}</td> 
+                                    </tr>
+                                ))
+                            }
                             </tbody>
+                            
+
                         </Table>
                     </Col>
 
@@ -157,12 +153,12 @@ function List() {
             <DeleteWindows
                 show={deleteModalShow}
                 onHide={() => setDeleteModalShow(false)}
-            // doc={document}
+                doc={document}
             />
             <EditWindows
                 show={editModalShow}
                 onHide={() => setEditModalShow(false)}
-            // doc={document}
+                doc={document}
             />
         </>
     );
