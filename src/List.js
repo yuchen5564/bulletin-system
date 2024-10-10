@@ -21,12 +21,12 @@ function NewlineText(props) {
 }
 
 function DeleteWindows(props) {
-    // var docId = props.doc.id;
+    const docId = props.doc ? props.doc.id : '';
 
-    // const del = async () => {
-    //     await deleteDoc(doc(db, 'announcement', docId));
-    //     window.location.reload();
-    // }
+    const del = async () => {
+        await deleteDoc(doc(db, 'announcement', docId));
+        window.location.reload();
+    }
 
     return (
         <Modal
@@ -37,7 +37,7 @@ function DeleteWindows(props) {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Delete Post (post id{/*{props.doc.id}*/})
+                    Delete Post ({docId})
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -47,7 +47,7 @@ function DeleteWindows(props) {
                 </p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" >Confirm</Button>  {/*onClick={del}*/}
+                <Button variant="danger" onClick={del}>Confirm</Button>  {/*onClick={del}*/}
             </Modal.Footer>
         </Modal>
     );
