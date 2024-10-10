@@ -12,11 +12,11 @@ import { getFirestore, addDoc, collection } from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_Firebase_apiKey,
-  authDomain: process.env.REACT_APP_Firebase_authDomain,
-  projectId: process.env.REACT_APP_Firebase_projectId,
-  storageBucket: process.env.REACT_APP_Firebase_storageBucket,
-  messagingSenderId: process.env.REACT_APP_Firebase_messagingSenderId,
-  appId: process.env.REACT_APP_Firebase_appId
+  authDomain: "bulletin-system-3851a.firebaseapp.com",
+  projectId: "bulletin-system-3851a",
+  storageBucket: "bulletin-system-3851a.appspot.com",
+  messagingSenderId: "276477105347",
+  appId: "1:276477105347:web:e901a42f412e666c23fe76"
 };
 
 // Initialize Firebase

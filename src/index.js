@@ -21,10 +21,10 @@ root.render(
   <AuthProvider>
     <Routes>
       <Route exact path="/" element={<App />} />
-      <Route element={<ProtectedRoutes />}>
+      {/* <Route element={<ProtectedRoutes />}> */}
       <Route exact path='/list' element={<List />} />
       <Route exact path='/post' element={<Post />} />
-      </Route>
+      {/* </Route> */}
       <Route exact path='/news' element={<News />} />
       {/* <Route exact path='/login' element={<Login />} /> */}
       <Route path='*' element={<NotFound />} />
