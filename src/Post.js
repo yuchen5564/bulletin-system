@@ -139,7 +139,7 @@ function Post() {
 
                             {error ? <Alert variant='danger'>Something worng, please try again. ({error.toString()})</Alert> : <p></p>}
                             {success ? <Alert variant='success'>Success!</Alert> : <p></p>}
-                            {percent ? <Alert variant='info'>File Upload: {percent} % done</Alert> : <p></p>}
+                            {percent ? <Alert variant='info'>File Upload: {percent.toString()} % done</Alert> : <p></p>}
 
 
                         </Form>
