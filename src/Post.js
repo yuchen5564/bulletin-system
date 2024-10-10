@@ -43,6 +43,7 @@ function Post() {
         const docRef = doc(db, "announcement", date.toString());
     
         if (file) {
+            console.log("Find File");
             const storageRef = ref(storage, `/bulletin_image/${file.name}`);
             const uploadTask = uploadBytesResumable(storageRef, file);
     
