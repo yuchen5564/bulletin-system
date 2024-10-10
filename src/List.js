@@ -8,7 +8,7 @@ import * as Icon from 'react-bootstrap-icons';
 import Modal from 'react-bootstrap/Modal';
 import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
-import { collection, getDocs, query, orderBy, doc, setDoc, where, deleteDoc, updateDoc, addDoc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from './firebaseAuth/firebase';
 
 import './main.css';
@@ -55,9 +55,34 @@ function DeleteWindows(props) {
 }
 
 function EditWindows(props) {
-    //const docRef = doc(db, "announcement", props.docId);
-    //const docSnap = getDocs(docRef);
-    //console.log("Document data:", docSnap.data());
+    const docId = props.doc ? props.doc.id : '';
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [category, setCategory] = useState('');
+
+    useEffect(() => {
+        if (props.doc) {
+            setTitle(props.doc.title);
+            setContent(props.doc.content);
+            setCategory(props.doc.category);
+        }
+    }, [props.doc]);
+
+    const saveChanges = async () => {
+        if (docId) {
+            
+            const docRef = doc(db, "announcement", docId);
+            await updateDoc(docRef, {
+                title,
+                content,
+                category
+            });
+            window.location.reload();
+        } else {
+            console.error("Document ID is invalid");
+        }
+    };
+
     return (
         <Modal
             {...props}
@@ -67,30 +92,25 @@ function EditWindows(props) {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Edit Post (post id{/*{props.doc.id}*/})
+                    Edit Post ({docId})
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* <h4>【{props.doc.category}】{props.doc.title}</h4>
-                <p>
-                    <NewlineText text={props.doc.content} />
-                    {props.doc.pic ? <p><img src={props.doc.pic} alt="pic" width="300" /><br /></p> : <p></p>}
-                </p> */}
                 <Form>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control required type="text" defaultValue="Test" />
+                        <Form.Control required type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Content</Form.Label>
-                        <Form.Control required as="textarea" placeholder="Write something" defaultValue="123123" rows={3} />
+                        <Form.Control required as="textarea" placeholder="Write something" value={content} onChange={(e) => setContent(e.target.value)} rows={3} />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Category</Form.Label>
-                        <Form.Select required aria-label="Default select example" defaultValue="other" >
-                            <option Value="Sale">Sale</option>
+                        <Form.Select required aria-label="Default select example" value={category} onChange={(e) => setCategory(e.target.value)}>
+                            <option value="Sale">Sale</option>
                             <option value="News">News</option>
-                            <option value="EProduct">Product</option>
+                            <option value="Product">Product</option>
                             <option value="Other">Other</option>
                             <option value="Test">Test</option>
                         </Form.Select>
@@ -98,7 +118,7 @@ function EditWindows(props) {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Save</Button>
+                <Button onClick={saveChanges}>Save</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -111,30 +131,34 @@ function List() {
     const [announcement, setAnnouncement] = useState([]);
 
     const fetchPost = async () => {
-        //db.collection('cities').order('population', 'desc')
         await getDocs(query(collection(db, "announcement"), orderBy('ptime', 'desc')))
             .then((querySnapshot) => {
-                const newData = querySnapshot.docs
-                    .map((doc) => ({ ...doc.data(), id: doc.id }));
-
+                const newData = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
                 setAnnouncement(newData);
-            })
-
+            });
     }
 
     useEffect(() => {
         fetchPost();
-    }, [])
+    }, []);
+
+    const handleEditShow = (item) => {
+        setDoc(item);
+        setEditModalShow(true);
+    };
+
+    const handleDeleteShow = (item) => {
+        setDoc(item);
+        setDeleteModalShow(true);
+    };
 
     return (
         <>
-
             <Navb />
             <Container fluid className='mt-5'>
-
                 <Row className='justify-content-center'>
                     <Col md={7}>
-                        <h1 style={{ 'font-family': 'Inter-sb' }}>List</h1><br />
+                        <h1 style={{ 'fontFamily': 'Inter-sb' }}>List</h1><br />
                         <Table striped border hover>
                             <thead>
                                 <tr>
@@ -144,29 +168,26 @@ function List() {
                                     <th>Post Time</th>
                                 </tr>
                             </thead>
-                            {/* 以下之後會換成自動取得資料數量 */}
                             <tbody>
-                            {
-                                announcement?.map((item, i) => (
-                                        <tr>
-                                            <td>
-                                                <Button variant="outline-primary" onClick={() => { setEditModalShow(true); setDoc(item) }}><Icon.PencilSquare /></Button>{' '}
-                                                <Button variant="outline-danger" onClick={() => { setDeleteModalShow(true); setDoc(item) }}><Icon.Trash /></Button>
-                                            </td>
-                                            <td>{item.category}</td> 
-                                            <td>{item.title}</td>  
-                                            <td>{item.ptime}</td> 
+                                {announcement?.map((item) => (
+                                    <tr key={item.id}>
+                                        <td>
+                                            <Button variant="outline-primary" onClick={() => handleEditShow(item)}>
+                                                <Icon.PencilSquare />
+                                            </Button>{' '}
+                                            <Button variant="outline-danger" onClick={() => handleDeleteShow(item)}>
+                                                <Icon.Trash />
+                                            </Button>
+                                        </td>
+                                        <td>{item.category}</td> 
+                                        <td>{item.title}</td>  
+                                        <td>{item.ptime}</td> 
                                     </tr>
-                                ))
-                            }
+                                ))}
                             </tbody>
-                            
-
                         </Table>
                     </Col>
-
                 </Row>
-
             </Container>
             <DeleteWindows
                 show={deleteModalShow}
