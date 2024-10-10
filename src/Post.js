@@ -74,6 +74,7 @@ function Post() {
                         });
     
                         setSuccess(true);
+                        clearForm();
                     } catch (e) {
                         seterror(e);
                     }
@@ -91,12 +92,22 @@ function Post() {
                 });
     
                 setSuccess(true);
+                clearForm();
             } catch (e) {
                 seterror(e);
             }
         }
     };
     
+    const clearForm = () => {
+        setTitle("");
+        setContent("");
+        setCategory("Sale"); // Reset to the default category
+        setFile(""); // Reset the file state
+        setPicture(""); // Reset the picture URL
+        seterror(""); // Clear any error messages
+        setDate(""); // Reset date if needed
+    };
 
     return (
         <>
@@ -137,7 +148,8 @@ function Post() {
                             <hr className="my-4" />
 
                             <Button variant="primary" type="submit">Submit</Button>
-
+                            {' '}
+                            <Button variant="danger" type="clear" onClick={clearForm}>Clear</Button>
                             {error ? <Alert variant='danger'>Something worng, please try again. ({error.toString()})</Alert> : <p></p>}
                             {success ? <Alert variant='success'>Success!</Alert> : <p></p>}
                             {percent ? <Alert variant='info'>File Upload: {percent.toString()} % done</Alert> : <p></p>}
