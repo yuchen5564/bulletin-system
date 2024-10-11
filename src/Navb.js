@@ -4,13 +4,15 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 
 import Modal from 'react-bootstrap/Modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Login from './Login';
 
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseAuth/firebase";
 import { useContext } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AuthContext from "./firebaseAuth/AuthContext";
 import './main.css';
 
@@ -35,15 +37,33 @@ function LoginWindows(props) {
 
 }
 
-const handleLogout = async () => {
-  await signOut(auth);
-};
+const logoutSuccess = () => toast.success("Logout Successful", { position: "top-center" });
+const logoutError = () => toast.error("Logout Failed", { position: "top-center" });
+
 
 
 
 function Navb() {
   const { user } = useContext(AuthContext);
   const [loginModalShow, setLoginModalShow] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      logoutError();
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (!currentUser) {
+        logoutSuccess(); // Show success toast when user is fully logged out
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+  
   return (
     <>
       <Navbar bg="dark" data-bs-theme="dark" style={{ 'font-family': 'Inter-sb' }} fixed="top">
@@ -57,7 +77,8 @@ function Navb() {
             
           </Nav>
           {!user? <Button variant="primary" onClick={() => { setLoginModalShow(true) }}>Login</Button>:
-          <Button variant="danger" onClick={handleLogout}>Logout</Button>}
+          <Button variant="danger" onClick={() => {handleLogout();}}>Logout</Button>}
+          
 
         </Container>
       </Navbar>
@@ -66,6 +87,7 @@ function Navb() {
         show={loginModalShow}
         onHide={() => setLoginModalShow(false)}
       />
+      <ToastContainer autoClose={2000}/>
     </>
   );
 }
